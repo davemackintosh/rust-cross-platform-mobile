@@ -7,8 +7,7 @@ const PEOPLE: &str = "people/";
 //Lazy static
 lazy_static! {
     //runtime with threaded pool
-    static ref RUN_TIME: tokio::runtime::Runtime = tokio::runtime::Builder::new()
-        .threaded_scheduler()
+    static ref RUN_TIME: tokio::runtime::Runtime = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
         .unwrap();
@@ -66,7 +65,6 @@ pub struct SwapiClient();
 
 #[allow(non_snake_case)]
 impl SwapiClient {
-
     pub fn new() -> SwapiClient {
         SwapiClient()
     }
@@ -90,13 +88,8 @@ impl SwapiClient {
     }
 }
 
-
 pub async fn load_all_people() -> Result<ResponsePeople, Box<dyn std::error::Error>> {
     let url = format!("{}{}", SWAPI_BASE_URL, PEOPLE);
-    let people: ResponsePeople = HTTP_CLIENT.get(url.as_str())
-        .send()
-        .await?
-        .json()
-        .await?;
+    let people: ResponsePeople = HTTP_CLIENT.get(url.as_str()).send().await?.json().await?;
     Ok(people)
 }

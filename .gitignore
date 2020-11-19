@@ -2,3 +2,7 @@
 # Local History for Visual Studio Code
 .history/
 *.project
+tags
+tags.lock
+tags.temp
+.ccls-cache
